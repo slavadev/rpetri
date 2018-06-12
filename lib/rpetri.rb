@@ -1,5 +1,6 @@
+require "rpetri/object"
+require "rpetri/place"
+require "rpetri/transition"
+require "rpetri/arc"
+require "rpetri/net"
 require "rpetri/version"
-
-module Rpetri
-  # Your code goes here...
-end
