@@ -1,4 +1,5 @@
 require "rpetri/object"
+require "rpetri/errors"
 require "rpetri/node"
 require "rpetri/place"
 require "rpetri/transition"
