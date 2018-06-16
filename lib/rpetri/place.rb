@@ -1,8 +1,5 @@
 module RPetri
-  class Place < Object
-    def initialize
-      @type = :place
-      super
-    end
+  class Place < Node
+    def type; :place; end
   end
 end

@@ -1,8 +1,6 @@
 RSpec.describe RPetri::Transition do
-  describe 'initialize' do
-    let(:transition) { RPetri::Transition.new }
-    it 'sets transition type' do
-      expect(transition.type).to eq(:transition)
-    end
+  describe 'type' do
+    subject { RPetri::Transition.new('Transition').type }
+    it { is_expected.to eq(:transition) }
   end
 end

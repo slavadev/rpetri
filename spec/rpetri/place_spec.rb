@@ -1,8 +1,6 @@
 RSpec.describe RPetri::Place do
-  describe 'initialize' do
-    let(:place) { RPetri::Place.new }
-    it 'sets place type' do
-      expect(place.type).to eq(:place)
-    end
+  describe 'type' do
+    subject { RPetri::Place.new('Place').type }
+    it { is_expected.to eq(:place) }
   end
 end
