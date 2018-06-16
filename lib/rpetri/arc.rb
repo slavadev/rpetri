@@ -1,15 +1,14 @@
 module RPetri
   class Arc < Object
-    attr_reader :source, :target
+    attr_reader :source, :target, :options
 
-    def initialize(source, target)
+    def initialize(source, target, options = {})
       @source = source
       @target = target
+      @options = options
       validate!
       super()
     end
-
-    def type; :arc; end
 
     protected
 
@@ -20,7 +19,9 @@ module RPetri
       unless @target.is_a?(Place) || @target.is_a?(Transition)
         raise ValidationError, 'Target should be Place or Transition'
       end
-      raise ValidationError, 'Source and Target should be different type' if @source.type == @target.type
+      source_type = @source.is_a?(Place) ? :place : :target
+      target_type = @target.is_a?(Place) ? :place : :target
+      raise ValidationError, 'Source and Target should be different type' if source_type == target_type
     end
   end
 end

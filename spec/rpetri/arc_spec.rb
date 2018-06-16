@@ -5,15 +5,17 @@ RSpec.describe RPetri::Arc do
     let(:transition) { RPetri::Transition.new }
     let(:source) { place }
     let(:target) { transition}
-    subject { RPetri::Arc.new(source, target) }
+    let(:options) { {a: 1} }
+    subject { RPetri::Arc.new(source, target, options) }
 
     context 'when correct arc' do
       it 'does not raise and exception' do
         expect{ subject }.not_to raise_error
       end
-      it 'sets correct source and target' do
+      it 'sets correct source, target and options' do
         expect(subject.source).to eq(source)
         expect(subject.target).to eq(target)
+        expect(subject.options).to eq(options)
       end
     end
 
