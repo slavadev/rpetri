@@ -1,4 +1,5 @@
 require "rpetri/object"
+require "rpetri/node"
 require "rpetri/place"
 require "rpetri/transition"
 require "rpetri/arc"
