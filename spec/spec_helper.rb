@@ -1,5 +1,7 @@
 require "bundler/setup"
+require "support/factory_bot"
 require "faker"
+require "pry"
 require "rpetri"
 
 RSpec.configure do |config|

@@ -34,5 +34,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "faker", "~> 1.8.7"
+  spec.add_development_dependency "factory_bot", "~> 4.10.0"
   spec.add_development_dependency "pry", "~> 0.11.3"
 end

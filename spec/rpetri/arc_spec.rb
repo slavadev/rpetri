@@ -1,8 +1,8 @@
 require 'pry'
 RSpec.describe RPetri::Arc do
   describe 'initialize' do
-    let(:place) { RPetri::Place.new }
-    let(:transition) { RPetri::Transition.new }
+    let(:place) { build :place }
+    let(:transition) { build :transition }
     let(:source) { place }
     let(:target) { transition}
     let(:options) { {a: 1} }
