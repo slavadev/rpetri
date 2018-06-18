@@ -1,6 +1,15 @@
 RSpec.describe RPetri::Net do
+  let(:net) { build :net }
+  let(:place) { build :place }
+  let(:transition) { build :transition }
+  let(:arc) { build :arc }
+  let(:places_hash) { net.instance_variable_get(:@places_hash) }
+  let(:transitions_hash) { net.instance_variable_get(:@transitions_hash) }
+  let(:tokens_hash) { net.instance_variable_get(:@initial_tokens_hash) }
+  let(:arc_sources_hash) { net.instance_variable_get(:@arc_sources_hash) }
+  let(:arc_targets_hash) { net.instance_variable_get(:@arc_targets_hash) }
+
   describe 'initialize' do
-    subject(:net){ RPetri::Net.new }
     it 'initializes hashes' do
       expect(net.instance_variable_get(:@places_hash)).to eq({})
       expect(net.instance_variable_get(:@transitions_hash)).to eq({})
@@ -11,9 +20,6 @@ RSpec.describe RPetri::Net do
   end
 
   describe 'add_place' do
-    let(:net){ RPetri::Net.new }
-    let(:places_hash) { net.instance_variable_get(:@places_hash) }
-    let(:place) { build :place }
     let(:block) { Proc.new { 1 + 1 } }
     let(:options) { { tokens: tokens } }
     let(:tokens) { nil }
@@ -49,7 +55,6 @@ RSpec.describe RPetri::Net do
       end
       context 'when there are tokes' do
         let(:tokens) { Faker::Number.between(1, 10) }
-        let(:tokens_hash) { net.instance_variable_get(:@initial_tokens_hash) }
         it 'adds place to places hash' do
           expect(place.name).to eq(place_param)
           expect(place.block).to eq(block)
@@ -62,9 +67,6 @@ RSpec.describe RPetri::Net do
   end
 
   describe 'add_places' do
-    let(:net){ RPetri::Net.new }
-    let(:places_hash) { net.instance_variable_get(:@places_hash) }
-    let(:place) { RPetri::Place.new }
     let(:places) { [place]}
     context 'when there are no tokes' do
       before do
@@ -76,7 +78,6 @@ RSpec.describe RPetri::Net do
     end
     context 'when there are tokes' do
       let(:tokens) { Faker::Number.between(1, 10) }
-      let(:tokens_hash) { net.instance_variable_get(:@initial_tokens_hash) }
       before do
         net.add_places(places, tokens)
       end
@@ -90,9 +91,6 @@ RSpec.describe RPetri::Net do
   end
 
   describe 'add_transition' do
-    let(:net){ RPetri::Net.new }
-    let(:transitions_hash) { net.instance_variable_get(:@transitions_hash) }
-    let(:transition) { RPetri::Transition.new }
     let(:block) { Proc.new { 1 + 1 } }
     let(:options) { {} }
     before do
@@ -115,9 +113,6 @@ RSpec.describe RPetri::Net do
   end
 
   describe 'add_transitions' do
-    let(:net){ RPetri::Net.new }
-    let(:transitions_hash) { net.instance_variable_get(:@transitions_hash) }
-    let(:transition) { RPetri::Transition.new }
     let(:transitions) { [transition]}
     before do
       net.add_transitions(transitions)
@@ -127,17 +122,74 @@ RSpec.describe RPetri::Net do
     end
   end
 
+  describe 'add_arc' do
+    let(:options) { {} }
+    context 'when param is arc' do
+      before { net.add_arc(arc) }
+      it 'adds arcs to arcs hashes' do
+        expect(arc_sources_hash[arc.source.uuid]).to eq(arc)
+        expect(arc_targets_hash[arc.target.uuid]).to eq(arc)
+      end
+    end
+
+    context 'when param is souce and target' do
+      let(:arc) { arc_sources_hash.values.first }
+      before { net.add_arc(place, transition, options) }
+      it 'adds arcs to arcs hashes' do
+        expect(arc_sources_hash[arc.source.uuid]).to eq(arc)
+        expect(arc_targets_hash[arc.target.uuid]).to eq(arc)
+      end
+      it 'creates an arc' do
+        expect(arc.source).to eq(place)
+        expect(arc.target).to eq(transition)
+        expect(arc.options).to eq(options)
+      end
+    end
+
+    context 'when param is names' do
+      let(:arc) { arc_sources_hash.values.first }
+      subject { net.add_arc(place.name, transition.name, options) }
+      context 'when there are no such source in the net' do
+        before { net.add_transition(transition) }
+        it 'raises and exception' do
+          expect{ subject }.to raise_error(RPetri::ValidationError, 'There is no source with this name')
+        end
+      end
+
+      context 'when there are no such target in the net' do
+        before { net.add_place(place) }
+        it 'raises and exception' do
+          expect{ subject }.to raise_error(RPetri::ValidationError, 'There is no target with this name')
+        end
+      end
+
+      context 'when source and target are ok' do
+        before do
+          net.add_place(place)
+          net.add_transition(transition)
+          subject
+        end
+        it 'adds arcs to arcs hashes' do
+          expect(arc_sources_hash[arc.source.uuid]).to eq(arc)
+          expect(arc_targets_hash[arc.target.uuid]).to eq(arc)
+        end
+        it 'creates an arc' do
+          expect(arc.source).to eq(place)
+          expect(arc.target).to eq(transition)
+          expect(arc.options).to eq(options)
+        end
+      end
+    end
+  end
 
   describe 'add_arcs' do
-    let(:net){ RPetri::Net.new }
-    let(:arc_sources_hash) { net.instance_variable_get(:@arc_sources_hash) }
-    let(:arc_targets_hash) { net.instance_variable_get(:@arc_targets_hash) }
-    let(:arc) { RPetri::Place.new }
+    let(:arcs) { [arc]}
     before do
-      net.add_transitions(transitions)
+      net.add_arcs(arcs)
     end
-    it 'adds transition to places hash' do
-      expect(transitions_hash[transition.uuid]).to eq(transition)
+    it 'adds arcs to arcs hashes' do
+      expect(arc_sources_hash[arc.source.uuid]).to eq(arc)
+      expect(arc_targets_hash[arc.target.uuid]).to eq(arc)
     end
   end
 end
