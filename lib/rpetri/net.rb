@@ -1,5 +1,6 @@
 module RPetri
   class Net
+    extend NetDSL::ClassMethods
     def initialize()
       initialize_hashes
     end
