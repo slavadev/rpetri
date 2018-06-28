@@ -36,11 +36,14 @@ module RPetri
         klass = options.delete(:class)
         if args[0].is_a? String
           source = get_place_by_name(args[0]) || get_transition_by_name(args[0])
-          target = get_place_by_name(args[1]) || get_transition_by_name(args[1])
           raise RPetri::ValidationError, 'There is no source with this name' unless source
-          raise RPetri::ValidationError, 'There is no target with this name' unless target
         else
           source = args[0]
+        end
+        if args[1].is_a? String
+          target = get_place_by_name(args[1]) || get_transition_by_name(args[1])
+          raise RPetri::ValidationError, 'There is no target with this name' unless target
+        else
           target = args[1]
         end
         arc = (klass || Arc).new(source, target, options)
