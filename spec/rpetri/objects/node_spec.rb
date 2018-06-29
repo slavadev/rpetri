@@ -13,8 +13,8 @@ RSpec.describe RPetri::Node do
     end
     context 'with params' do
       let(:name) { Faker::Lorem.sentence }
-      let(:options) { {a: 1} }
-      let(:block) { Proc.new { 1 + 1} }
+      let(:options) { { a: 1 } }
+      let(:block) { proc { 1 + 1 } }
       it 'sets all attribures' do
         expect(node.name).to eq(name)
         expect(node.options).to eq(options)

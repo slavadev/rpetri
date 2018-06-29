@@ -20,9 +20,13 @@ RSpec.describe RPetri::Net::DSL do
 
   subject(:net) do
     TestNet.build do
-      place '1', tokens: 1 do 1 end
+      place '1', tokens: 1 do
+        1
+      end
       places [place_to_add], 2
-      transition '2' do 2 end
+      transition '2' do
+        2
+      end
       transitions [transition_to_add]
       arc '1', '2'
       arcs [arc_to_add]

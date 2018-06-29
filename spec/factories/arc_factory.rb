@@ -3,6 +3,6 @@ FactoryBot.define do
     initialize_with { new(source, target, options) }
     source { build :place }
     target { build :transition }
-    options Hash.new
+    options({})
   end
 end

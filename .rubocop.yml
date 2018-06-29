@@ -1,0 +1,13 @@
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 20
+
+# It's either a spec or configuration
+Metrics/BlockLength:
+  Enabled: false
+
+# For now
+Documentation:
+  Enabled: false

@@ -1,7 +1,7 @@
 module RPetri
   class Net
     module Builder
-      def initialize()
+      def initialize
         initialize_hashes
       end
 
@@ -34,18 +34,8 @@ module RPetri
         if args[1]
           options = args[2] || {}
           klass = options.delete(:class)
-          if args[0].is_a? String
-            source = get_place_by_name(args[0]) || get_transition_by_name(args[0])
-            raise RPetri::ValidationError, 'There is no source with this name' unless source
-          else
-            source = args[0]
-          end
-          if args[1].is_a? String
-            target = get_place_by_name(args[1]) || get_transition_by_name(args[1])
-            raise RPetri::ValidationError, 'There is no target with this name' unless target
-          else
-            target = args[1]
-          end
+          source = get_item_from_param(args[0], 'source')
+          target = get_item_from_param(args[1], 'target')
           arc = (klass || Arc).new(source, target, options)
         elsif args[0].is_a?(Arc)
           arc = args[0]
@@ -100,6 +90,15 @@ module RPetri
 
       def get_transition_by_name(name)
         @transitions_hash.values.find { |t| t.name == name }
+      end
+
+      def get_item_from_param(param, name)
+        if param.is_a? String
+          item = get_place_by_name(param) || get_transition_by_name(param)
+          raise RPetri::ValidationError, "There is no #{name} with this name" unless item
+          return item
+        end
+        param
       end
     end
   end

@@ -24,7 +24,7 @@ RSpec.describe RPetri::Net::Builder do
   end
 
   describe 'add_place' do
-    let(:block) { Proc.new { 1 + 1 } }
+    let(:block) { proc { 1 + 1 } }
     let(:options) { { tokens: tokens } }
     let(:tokens) { nil }
     before do
@@ -71,7 +71,7 @@ RSpec.describe RPetri::Net::Builder do
   end
 
   describe 'add_places' do
-    let(:places) { [place]}
+    let(:places) { [place] }
     context 'when there are no tokes' do
       before do
         net.add_places(places)
@@ -95,7 +95,7 @@ RSpec.describe RPetri::Net::Builder do
   end
 
   describe 'add_transition' do
-    let(:block) { Proc.new { 1 + 1 } }
+    let(:block) { proc { 1 + 1 } }
     let(:options) { {} }
     before do
       net.add_transition(transition_param, options, &block)
@@ -117,7 +117,7 @@ RSpec.describe RPetri::Net::Builder do
   end
 
   describe 'add_transitions' do
-    let(:transitions) { [transition]}
+    let(:transitions) { [transition] }
     before do
       net.add_transitions(transitions)
     end
@@ -156,14 +156,14 @@ RSpec.describe RPetri::Net::Builder do
       context 'when there are no such source in the net' do
         before { net.add_transition(transition) }
         it 'raises and exception' do
-          expect{ subject }.to raise_error(RPetri::ValidationError, 'There is no source with this name')
+          expect { subject }.to raise_error(RPetri::ValidationError, 'There is no source with this name')
         end
       end
 
       context 'when there are no such target in the net' do
         before { net.add_place(place) }
         it 'raises and exception' do
-          expect{ subject }.to raise_error(RPetri::ValidationError, 'There is no target with this name')
+          expect { subject }.to raise_error(RPetri::ValidationError, 'There is no target with this name')
         end
       end
 
@@ -187,7 +187,7 @@ RSpec.describe RPetri::Net::Builder do
   end
 
   describe 'add_arcs' do
-    let(:arcs) { [arc]}
+    let(:arcs) { [arc] }
     before do
       net.add_arcs(arcs)
     end

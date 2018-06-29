@@ -3,9 +3,9 @@ module RPetri
     class DSL
       module ClassMethods
         def build(&block)
-          net = self.new
+          net = new
           if block_given?
-            called_from = eval('self', block.binding)
+            called_from = eval('self', block.binding, __FILE__, __LINE__)
             dsl = Net::DSL.send(:new, net, called_from)
             dsl.instance_eval(&block)
             dsl.net
@@ -24,10 +24,18 @@ module RPetri
       end
 
       def method_missing(method, *args, &block)
-        @called_from.send(method, *args, &block)
+        if @called_from.respond_to?(method)
+          @called_from.send(method, *args, &block)
+        else
+          super
+        end
       end
 
-      [:place, :transition, :arc].each do |item|
+      def respond_to_missing?(method, _include_private = false)
+        @called_from.respond_to?(method)
+      end
+
+      %i[place transition arc].each do |item|
         define_method(item) do |*options, &block|
           @net.send(:"add_#{item}", *options, &block)
         end
