@@ -1,5 +1,9 @@
-RSpec.describe RPetri::Net do
-  let(:net) { build :net }
+RSpec.describe RPetri::Net::Builder do
+  class TestNet
+    include RPetri::Net::Builder
+  end
+
+  let(:net) { TestNet.new }
   let(:place) { build :place }
   let(:transition) { build :transition }
   let(:arc) { build :arc }

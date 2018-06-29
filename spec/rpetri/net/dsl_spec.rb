@@ -1,4 +1,9 @@
-RSpec.describe RPetri::NetDSL do
+RSpec.describe RPetri::Net::DSL do
+  class TestNet
+    extend RPetri::Net::DSL::ClassMethods
+    include RPetri::Net::Builder
+  end
+
   let(:place_to_add) { build :place }
   let(:transition_to_add) { build :transition }
   let(:arc_to_add) { build :arc, source: place_to_add, target: transition_to_add }
@@ -14,7 +19,7 @@ RSpec.describe RPetri::NetDSL do
   let(:new_arc) { (arc_sources_hash.values - [arc_to_add]).first }
 
   subject(:net) do
-    RPetri::Net.build do
+    TestNet.build do
       place '1', tokens: 1 do 1 end
       places [place_to_add], 2
       transition '2' do 2 end

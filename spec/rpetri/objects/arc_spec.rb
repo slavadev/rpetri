@@ -1,4 +1,3 @@
-require 'pry'
 RSpec.describe RPetri::Arc do
   describe 'initialize' do
     let(:place) { build :place }
