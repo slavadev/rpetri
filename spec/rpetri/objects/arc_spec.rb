@@ -53,4 +53,10 @@ RSpec.describe RPetri::Arc do
       end
     end
   end
+
+  describe '#is_runnable?' do
+    let(:arc) { build :arc }
+    subject { arc.is_runnable?(0) }
+    it { is_expected.to be_truthy }
+  end
 end

@@ -10,6 +10,10 @@ module RPetri
       super()
     end
 
+    def is_runnable?(_tokens)
+      true
+    end
+
     protected
 
     def validate!
