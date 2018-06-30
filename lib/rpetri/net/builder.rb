@@ -45,8 +45,8 @@ module RPetri
 
       def add_arcs(arcs)
         arcs.each do |arc|
-          @arc_sources_hash[arc.source.uuid] = arc
-          @arc_targets_hash[arc.target.uuid] = arc
+          @arc_sources_hash[arc.source.uuid] << arc
+          @arc_targets_hash[arc.target.uuid] << arc
         end
       end
 
@@ -63,8 +63,8 @@ module RPetri
       def initialize_hashes
         @places_hash = {}
         @transitions_hash = {}
-        @arc_sources_hash = {}
-        @arc_targets_hash = {}
+        @arc_sources_hash = Hash.new { |h,k| h[k] = [] }
+        @arc_targets_hash = Hash.new { |h,k| h[k] = [] }
         @initial_tokens_hash = {}
       end
 

@@ -131,17 +131,17 @@ RSpec.describe RPetri::Net::Builder do
     context 'when param is arc' do
       before { net.add_arc(arc) }
       it 'adds arcs to arcs hashes' do
-        expect(arc_sources_hash[arc.source.uuid]).to eq(arc)
-        expect(arc_targets_hash[arc.target.uuid]).to eq(arc)
+        expect(arc_sources_hash[arc.source.uuid]).to eq([arc])
+        expect(arc_targets_hash[arc.target.uuid]).to eq([arc])
       end
     end
 
     context 'when param is souce and target' do
-      let(:arc) { arc_sources_hash.values.first }
+      let(:arc) { arc_sources_hash.values.flatten.first }
       before { net.add_arc(place, transition, options) }
       it 'adds arcs to arcs hashes' do
-        expect(arc_sources_hash[arc.source.uuid]).to eq(arc)
-        expect(arc_targets_hash[arc.target.uuid]).to eq(arc)
+        expect(arc_sources_hash[arc.source.uuid]).to eq([arc])
+        expect(arc_targets_hash[arc.target.uuid]).to eq([arc])
       end
       it 'creates an arc' do
         expect(arc.source).to eq(place)
@@ -151,7 +151,7 @@ RSpec.describe RPetri::Net::Builder do
     end
 
     context 'when param is names' do
-      let(:arc) { arc_sources_hash.values.first }
+      let(:arc) { arc_sources_hash.values.flatten.first }
       subject { net.add_arc(place.name, transition.name, options) }
       context 'when there are no such source in the net' do
         before { net.add_transition(transition) }
@@ -174,8 +174,8 @@ RSpec.describe RPetri::Net::Builder do
           subject
         end
         it 'adds arcs to arcs hashes' do
-          expect(arc_sources_hash[arc.source.uuid]).to eq(arc)
-          expect(arc_targets_hash[arc.target.uuid]).to eq(arc)
+          expect(arc_sources_hash[arc.source.uuid]).to eq([arc])
+          expect(arc_targets_hash[arc.target.uuid]).to eq([arc])
         end
         it 'creates an arc' do
           expect(arc.source).to eq(place)
@@ -192,8 +192,8 @@ RSpec.describe RPetri::Net::Builder do
       net.add_arcs(arcs)
     end
     it 'adds arcs to arcs hashes' do
-      expect(arc_sources_hash[arc.source.uuid]).to eq(arc)
-      expect(arc_targets_hash[arc.target.uuid]).to eq(arc)
+      expect(arc_sources_hash[arc.source.uuid]).to eq([arc])
+      expect(arc_targets_hash[arc.target.uuid]).to eq([arc])
     end
   end
 end
