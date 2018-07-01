@@ -8,5 +8,15 @@ module RPetri
       @block = block
       super()
     end
+
+    def run
+      called_from.instance_eval(&@block) if @block
+    end
+
+    protected
+
+    def called_from
+      @called_from ||= eval('self', @block.binding, __FILE__, __LINE__)
+    end
   end
 end

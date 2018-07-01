@@ -10,7 +10,7 @@ module RPetri
       super()
     end
 
-    def is_runnable?(_tokens)
+    def runnable?(_tokens)
       true
     end
 

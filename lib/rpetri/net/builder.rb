@@ -53,7 +53,6 @@ module RPetri
       def add_tokens_to(places, tokens = 1)
         places = [places] if places.is_a?(Place)
         places.each do |place|
-          @initial_tokens_hash[place.uuid] ||= 0
           @initial_tokens_hash[place.uuid] += tokens
         end
       end
@@ -63,9 +62,9 @@ module RPetri
       def initialize_hashes
         @places_hash = {}
         @transitions_hash = {}
-        @arc_sources_hash = Hash.new { |h,k| h[k] = [] }
-        @arc_targets_hash = Hash.new { |h,k| h[k] = [] }
-        @initial_tokens_hash = {}
+        @arc_sources_hash = Hash.new { |h, k| h[k] = [] }
+        @arc_targets_hash = Hash.new { |h, k| h[k] = [] }
+        @initial_tokens_hash = Hash.new(0)
       end
 
       def get_item(base_class, item, options, &block)
