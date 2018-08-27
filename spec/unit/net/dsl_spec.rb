@@ -16,7 +16,7 @@ RSpec.describe RPetri::Net::DSL do
 
   let(:new_place) { (places_hash.values - [place_to_add]).first }
   let(:new_transition) { (transitions_hash.values - [transition_to_add]).first }
-  let(:new_arc) { (arc_sources_hash.values - [arc_to_add]).first }
+  let(:new_arc) { (arc_sources_hash[new_place.uuid]).first }
 
   subject(:net) do
     TestNet.build do
@@ -36,8 +36,8 @@ RSpec.describe RPetri::Net::DSL do
   it 'set hashes' do
     expect(places_hash.values).to include(place_to_add)
     expect(transitions_hash.values).to include(transition_to_add)
-    expect(arc_sources_hash.values).to include(arc_to_add)
-    expect(arc_targets_hash.values).to include(arc_to_add)
+    expect(arc_sources_hash[arc_to_add.source.uuid]).to include(arc_to_add)
+    expect(arc_targets_hash[arc_to_add.target.uuid]).to include(arc_to_add)
   end
 
   it 'creates place accordinly' do

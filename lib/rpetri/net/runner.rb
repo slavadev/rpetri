@@ -6,14 +6,7 @@ module RPetri
       def run(options = {})
         run_set_options(options)
         run_init
-        @logger.info("Starting with seed: #{@seed}")
-        current_step = 1
-        until @transitions_to_run.empty?
-          @logger.info("Step: #{current_step}")
-          step
-          current_step += 1
-        end
-        @logger.info('Done!')
+        run_main
       end
 
       protected
@@ -29,6 +22,17 @@ module RPetri
         @tokens_hash = @initial_tokens_hash.dup
         @weights_hash = Hash.new(1)
         @transitions_to_run = @transitions_hash.keys
+      end
+
+      def run_main
+        @logger.info("Starting with seed: #{@seed}")
+        current_step = 1
+        until @transitions_to_run.empty?
+          @logger.info("Step: #{current_step}")
+          step
+          current_step += 1
+        end
+        @logger.info('Done!')
       end
 
       def step

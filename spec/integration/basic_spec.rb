@@ -1,13 +1,7 @@
-RSpec.describe RPetri::Net::Runner do
-  class TestNet
-    extend RPetri::Net::DSL::ClassMethods
-    include RPetri::Net::Builder
-    include RPetri::Net::Runner
-  end
-
+RSpec.describe RPetri do
   describe 'basic net' do
     it 'runs' do
-      net = TestNet.build do
+      net = RPetri::Net.build do
         place 'Start', tokens: 1
         transition 'First' do
           @a = 1
