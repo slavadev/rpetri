@@ -16,6 +16,7 @@ module RPetri
     protected
 
     def called_from
+      binding.pry
       @called_from ||= eval('self', @block.binding, __FILE__, __LINE__)
     end
   end

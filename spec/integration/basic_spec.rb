@@ -1,7 +1,7 @@
 RSpec.describe RPetri do
   describe 'basic net' do
-    it 'runs' do
-      net = RPetri::Net.build do
+    let(:net) do
+      RPetri::Net.build do
         place 'Start', tokens: 1
         transition 'First' do
           @a = 1
@@ -20,6 +20,8 @@ RSpec.describe RPetri do
         arc 'Middle', 'Second'
         arc 'Second', 'End'
       end
+    end
+    it 'runs' do
       net.run
     end
   end
