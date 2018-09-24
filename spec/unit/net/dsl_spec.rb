@@ -14,7 +14,7 @@ RSpec.describe RPetri::Net::DSL do
 
   let(:new_place) { (places_hash.values - [place_to_add]).first }
   let(:new_transition) { (transitions_hash.values - [transition_to_add]).first }
-  let(:new_arc) { (arc_sources_hash[new_place.uuid]).first }
+  let(:new_arc) { arc_sources_hash[new_place.uuid].first }
 
   subject(:net) do
     TestNet.build do

@@ -40,9 +40,9 @@ module RPetri
       end
 
       def finilize
-        @dsl_places_stack.each { |i| i.call }
-        @dsl_transitions_stack.each { |i| i.call }
-        @dsl_arcs_stack.each { |i| i.call }
+        @dsl_places_stack.each(&:call)
+        @dsl_transitions_stack.each(&:call)
+        @dsl_arcs_stack.each(&:call)
       end
 
       private

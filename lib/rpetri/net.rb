@@ -5,8 +5,8 @@ module RPetri
     include Builder
     include Runner
 
-    setting :max_steps_count, 10000
-    setting :max_loops_count, 100
+    setting :max_steps_count, 1_000
+    setting :max_loops_count, 50
     setting :logger, Logger.new(STDOUT)
   end
 end

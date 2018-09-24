@@ -15,6 +15,8 @@ module RPetri
         @logger = options[:logger] || self.class.config.logger
         @logger.progname = 'RPetri'
         @seed = options[:seed] || Random.new_seed
+        @max_steps_count = options[:max_steps_count] || self.class.config.max_steps_count
+        @max_loops_count = options[:max_loops_count] || self.class.config.max_loops_count
         @context = options[:context]
       end
 
@@ -33,7 +35,7 @@ module RPetri
           @logger.info("Step: #{current_step}")
           step
           current_step += 1
-          if current_step > self.class.config.max_steps_count
+          if current_step > @max_steps_count
             @logger.fatal("Too many steps! Already #{current_step}!")
             raise TooManyStepsError
           end
@@ -42,7 +44,7 @@ module RPetri
       end
 
       def step
-        possible_transitions_hash.sort_by { |t| @random.rand * @weights_hash[t] }.reverse.each do |uuid, arcs|
+        possible_transitions_hash.sort_by { |t| @random.rand * @weights_hash[t] }.reverse_each do |uuid, arcs|
           run_transition(uuid, arcs) && break if transition_is_runnable(arcs[:to])
         end
         check_places
@@ -98,9 +100,9 @@ module RPetri
       end
 
       def check_for_looping
-        state_string = @tokens_hash.select { |_k, v| v > 0 }.reduce { |t| t.to_s }
+        state_string = @tokens_hash.select { |_k, v| v > 0 }.reduce(&:to_s)
         @history_hash[state_string] += 1
-        if @history_hash[state_string] > self.class.config.max_loops_count
+        if @history_hash[state_string] > @max_loops_count
           @logger.fatal("Looping! Same state #{@history_hash[state_string]} times!")
           raise LoopingError
         end
