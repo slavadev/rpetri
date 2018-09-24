@@ -1,8 +1,5 @@
 RSpec.describe RPetri::Net::Runner do
-  class TestNet
-    extend RPetri::Net::DSL::ClassMethods
-    include RPetri::Net::Builder
-    include RPetri::Net::Runner
+  class TestNet < RPetri::Net
   end
 
   describe '#run' do

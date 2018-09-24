@@ -1,6 +1,5 @@
 RSpec.describe RPetri::Net::Builder do
-  class TestNet
-    include RPetri::Net::Builder
+  class TestNet < RPetri::Net
   end
 
   let(:net) { TestNet.new }

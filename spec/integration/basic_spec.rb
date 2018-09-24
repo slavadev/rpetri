@@ -1,27 +1,28 @@
 RSpec.describe RPetri do
-  describe 'basic net' do
-    let(:net) do
-      RPetri::Net.build do
-        place 'Start', tokens: 1
-        transition 'First' do
-          @a = 1
-        end
-        place 'Middle' do
-          expect(@a).to be(1)
-        end
-        transition 'Second' do
-          @a += 1
-        end
-        place 'End' do
-          expect(@a).to be(2)
-        end
-        arc 'Start', 'First'
-        arc 'First', 'Middle'
-        arc 'Middle', 'Second'
-        arc 'Second', 'End'
+  let(:net) do
+    RPetri::Net.build do
+      place 'Start', tokens: 1
+      arc 'Start', 'First'
+      transition 'First' do
+        @a = 1
+      end
+      arc 'First', 'Middle'
+      place 'Middle' do
+        expect(@a).to be(1)
+      end
+      arc 'Middle', 'Second'
+      transition 'Second' do
+        @a += 1
+      end
+      arc 'Second', 'End'
+      place 'End' do
+        expect(@a).to be(2)
       end
     end
-    it 'runs' do
+  end
+
+  describe 'basic net' do
+    it 'works' do
       net.run
     end
   end

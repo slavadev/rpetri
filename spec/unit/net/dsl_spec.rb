@@ -1,7 +1,5 @@
 RSpec.describe RPetri::Net::DSL do
-  class TestNet
-    extend RPetri::Net::DSL::ClassMethods
-    include RPetri::Net::Builder
+  class TestNet < RPetri::Net
   end
 
   let(:place_to_add) { build :place }
@@ -20,16 +18,16 @@ RSpec.describe RPetri::Net::DSL do
 
   subject(:net) do
     TestNet.build do
+      arc '1', '2'
+      arcs [arc_to_add]
       place '1', tokens: 1 do
         1
       end
-      places [place_to_add], 2
       transition '2' do
         2
       end
+      places [place_to_add], 2
       transitions [transition_to_add]
-      arc '1', '2'
-      arcs [arc_to_add]
     end
   end
 

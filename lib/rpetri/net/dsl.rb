@@ -8,6 +8,7 @@ module RPetri
             called_from = eval('self', block.binding, __FILE__, __LINE__)
             dsl = Net::DSL.send(:new, net, called_from)
             dsl.instance_eval(&block)
+            dsl.finilize
             dsl.net
           else
             net
@@ -21,6 +22,9 @@ module RPetri
       def initialize(net, called_from)
         @net = net
         @called_from = called_from
+        @dsl_places_stack = []
+        @dsl_transitions_stack = []
+        @dsl_arcs_stack = []
       end
 
       def method_missing(method, *args, &block)
@@ -35,19 +39,36 @@ module RPetri
         @called_from.respond_to?(method)
       end
 
-      %i[place transition arc].each do |item|
-        define_method(item) do |*options, &block|
-          @net.send(:"add_#{item}", *options, &block)
-        end
-        if item == :place
-          define_method(:places) do |items, tokens = 0|
-            @net.add_places(items, tokens)
-          end
-        else
-          define_method(:"#{item}s") do |items|
-            @net.send(:"add_#{item}s", items)
-          end
-        end
+      def finilize
+        @dsl_places_stack.each { |i| i.call }
+        @dsl_transitions_stack.each { |i| i.call }
+        @dsl_arcs_stack.each { |i| i.call }
+      end
+
+      private
+
+      def place(*options, &block)
+        @dsl_places_stack.push(-> { @net.add_place(*options, &block) })
+      end
+
+      def transition(*options, &block)
+        @dsl_transitions_stack.push(-> { @net.add_transition(*options, &block) })
+      end
+
+      def arc(*options, &block)
+        @dsl_arcs_stack.push(-> { @net.add_arc(*options, &block) })
+      end
+
+      def places(items, tokens = 0)
+        @dsl_places_stack.push(-> { @net.add_places(items, tokens) })
+      end
+
+      def transitions(items)
+        @dsl_transitions_stack.push(-> { @net.add_transitions(items) })
+      end
+
+      def arcs(items)
+        @dsl_arcs_stack.push(-> { @net.add_arcs(items) })
       end
     end
   end

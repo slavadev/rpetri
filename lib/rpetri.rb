@@ -1,3 +1,6 @@
+# Vendor
+require 'dry/configurable'
+# Own
 require 'rpetri/errors'
 require 'rpetri/objects/object'
 require 'rpetri/objects/node'
