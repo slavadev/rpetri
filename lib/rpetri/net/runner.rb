@@ -92,10 +92,13 @@ module RPetri
       end
 
       def check_places
+        places_checked = {}
         @tokens_hash.select { |_k, v| v > 0 }.each_key do |uuid|
+          next if places_checked[uuid]
           place = @places_hash[uuid]
           @logger.info("Checking: #{place.name}")
           place.run(context: @context)
+          places_checked[uuid] = true
         end
       end
 
