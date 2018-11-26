@@ -12,3 +12,5 @@ require 'rpetri/net/builder'
 require 'rpetri/net/runner'
 require 'rpetri/net'
 require 'rpetri/version'
+# Extentions
+require 'rpetri/extentions/net_place'
