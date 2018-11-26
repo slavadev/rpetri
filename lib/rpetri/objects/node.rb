@@ -9,9 +9,9 @@ module RPetri
       super()
     end
 
-    def run(context: nil)
-      return unless @block
-      @eval_context = context
+    def run(options = {})
+      return unless @nblock
+      @eval_context = options[:context]
       eval_context.instance_eval(&@block)
     end
 

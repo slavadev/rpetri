@@ -8,5 +8,6 @@ module RPetri
     setting :max_steps_count, 1_000
     setting :max_loops_count, 50
     setting :logger, Logger.new(STDOUT)
+    setting :logger_prefix, ''
   end
 end

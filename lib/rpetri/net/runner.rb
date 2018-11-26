@@ -4,24 +4,24 @@ module RPetri
   class Net
     module Runner
       def run(options = {})
-        run_set_options(options)
+        @options = options
+        run_set_options
         run_init
         run_main
       end
 
       protected
 
-      def run_set_options(options)
-        @logger = options[:logger] || self.class.config.logger
-        @logger.progname = 'RPetri'
-        @seed = options[:seed] || Random.new_seed
-        @max_steps_count = options[:max_steps_count] || self.class.config.max_steps_count
-        @max_loops_count = options[:max_loops_count] || self.class.config.max_loops_count
-        @context = options[:context]
+      def run_set_options
+        @options[:logger] ||= self.class.config.logger
+        @options[:logger_prefix] ||= self.class.config.logger_prefix
+        @options[:seed] ||= Random.new_seed
+        @max_steps_count = @options[:max_steps_count] || self.class.config.max_steps_count
+        @max_loops_count = @options[:max_loops_count] || self.class.config.max_loops_count
       end
 
       def run_init
-        @random = Random.new(@seed)
+        @random = Random.new(@options[:seed])
         @tokens_hash = @initial_tokens_hash.dup
         @weights_hash = Hash.new(1)
         @transitions_to_run = @transitions_hash.keys
@@ -29,18 +29,18 @@ module RPetri
       end
 
       def run_main
-        @logger.info("Starting with seed: #{@seed}")
+        log("Starting with seed: #{@options[:seed]}")
         current_step = 1
         until @transitions_to_run.empty?
-          @logger.info("Step: #{current_step}")
+          log("Step: #{current_step}")
           step
           current_step += 1
           if current_step > @max_steps_count
-            @logger.fatal("Too many steps! Already #{current_step}!")
+            fatal("Too many steps! Already #{current_step}!")
             raise TooManyStepsError
           end
         end
-        @logger.info('Done!')
+        log('Done!')
       end
 
       def step
@@ -75,8 +75,8 @@ module RPetri
 
       def run_transition(uuid, arcs)
         transition = @transitions_hash[uuid]
-        @logger.info("Running: #{transition.name}")
-        transition.run(context: @context)
+        log("Running: #{transition.name}")
+        transition.run(@options)
         @weights_hash[uuid] /= 2
         @transitions_to_run.delete(uuid)
         update_tokens(arcs[:to], arcs[:from])
@@ -96,8 +96,8 @@ module RPetri
         @tokens_hash.select { |_k, v| v > 0 }.each_key do |uuid|
           next if places_checked[uuid]
           place = @places_hash[uuid]
-          @logger.info("Checking: #{place.name}")
-          place.run(context: @context)
+          log("Checking: #{place.name}")
+          place.run(@options)
           places_checked[uuid] = true
         end
       end
@@ -106,9 +106,17 @@ module RPetri
         state_string = @tokens_hash.select { |_k, v| v > 0 }.reduce(&:to_s)
         @history_hash[state_string] += 1
         if @history_hash[state_string] > @max_loops_count
-          @logger.fatal("Looping! Same state #{@history_hash[state_string]} times!")
+          fatal("Looping! Same state #{@history_hash[state_string]} times!")
           raise LoopingError
         end
+      end
+
+      def log(something)
+        @options[:logger].info('RPetri') { @options[:logger_prefix] + ' ' + something }
+      end
+
+      def fatal(something)
+        @options[:logger].fatal('RPetri') { @options[:logger_prefix] + ' ' + something }
       end
     end
   end
