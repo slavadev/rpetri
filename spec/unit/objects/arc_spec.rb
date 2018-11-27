@@ -56,7 +56,28 @@ RSpec.describe RPetri::Arc do
 
   describe '#runnable?' do
     let(:arc) { build :arc }
-    subject { arc.runnable?(0) }
-    it { is_expected.to be_truthy }
+    subject { arc.runnable?(tokens_at_source) }
+    context 'when there are tokens at souce' do
+      let(:tokens_at_source) { rand(10) + 1 }
+      it { is_expected.to be_truthy }
+    end
+    context 'when there are no tokens at souce' do
+      let(:tokens_at_source) { 0 }
+      it { is_expected.to be_falsey }
+    end
+  end
+
+  describe '#tokens_to_take' do
+    let(:arc) { build :arc }
+    subject { arc.tokens_to_take(tokens_at_source) }
+    let(:tokens_at_source) { rand(3) }
+    it { is_expected.to eq(1) }
+  end
+
+  describe '#tokens_to_give' do
+    let(:arc) { build :arc }
+    subject { arc.tokens_to_give(tokens_at_target) }
+    let(:tokens_at_target) { rand(3) }
+    it { is_expected.to eq(1) }
   end
 end

@@ -66,9 +66,9 @@ module RPetri
       def transition_is_runnable(arcs)
         @temp_tokens_hash = @tokens_hash.dup
         arcs.each do |arc|
-          return false if @temp_tokens_hash[arc.source.uuid] < 1
-          return false unless arc.runnable?(@temp_tokens_hash[arc.source.uuid])
-          @temp_tokens_hash[arc.source.uuid] -= 1
+          tokens = @temp_tokens_hash[arc.source.uuid]
+          return false unless arc.runnable?(tokens)
+          @temp_tokens_hash[arc.source.uuid] -= arc.tokens_to_take(tokens)
         end
         true
       end
@@ -84,10 +84,10 @@ module RPetri
 
       def update_tokens(to, from)
         to.each do |arc|
-          @tokens_hash[arc.source.uuid] -= 1
+          @tokens_hash[arc.source.uuid] -= arc.tokens_to_take(@tokens_hash[arc.source.uuid])
         end
         from.each do |arc|
-          @tokens_hash[arc.target.uuid] += 1
+          @tokens_hash[arc.target.uuid] += arc.tokens_to_give(@tokens_hash[arc.target.uuid])
         end
       end
 

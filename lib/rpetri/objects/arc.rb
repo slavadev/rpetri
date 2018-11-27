@@ -10,8 +10,16 @@ module RPetri
       super()
     end
 
-    def runnable?(_tokens)
-      true
+    def runnable?(tokens_at_source)
+      tokens_at_source > 0
+    end
+
+    def tokens_to_take(tokens_at_source)
+      1
+    end
+
+    def tokens_to_give(tokens_at_target)
+      1
     end
 
     protected
