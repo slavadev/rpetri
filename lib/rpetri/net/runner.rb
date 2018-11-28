@@ -68,7 +68,9 @@ module RPetri
         arcs.each do |arc|
           tokens = @temp_tokens_hash[arc.source.uuid]
           return false unless arc.runnable?(tokens)
-          @temp_tokens_hash[arc.source.uuid] -= arc.tokens_to_take(tokens)
+          tokens_arc_want_to_take = arc.tokens_to_take(tokens)
+          tokens_to_take = arc.source.tokens_to_give(tokens, tokens_arc_want_to_take)
+          @temp_tokens_hash[arc.source.uuid] -= tokens_to_take
         end
         true
       end
@@ -84,10 +86,16 @@ module RPetri
 
       def update_tokens(to, from)
         to.each do |arc|
-          @tokens_hash[arc.source.uuid] -= arc.tokens_to_take(@tokens_hash[arc.source.uuid])
+          tokens = @tokens_hash[arc.source.uuid]
+          tokens_arc_want_to_take = arc.tokens_to_take(tokens)
+          tokens_to_take = arc.source.tokens_to_give(tokens, tokens_arc_want_to_take)
+          @tokens_hash[arc.source.uuid] -= tokens_to_take
         end
         from.each do |arc|
-          @tokens_hash[arc.target.uuid] += arc.tokens_to_give(@tokens_hash[arc.target.uuid])
+          tokens = @tokens_hash[arc.target.uuid]
+          tokens_arc_want_to_give = arc.tokens_to_give(tokens)
+          tokens_to_give = arc.target.tokens_to_take(tokens, tokens_arc_want_to_give)
+          @tokens_hash[arc.target.uuid] += tokens_to_give
         end
       end
 
