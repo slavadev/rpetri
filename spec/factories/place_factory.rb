@@ -4,5 +4,10 @@ FactoryBot.define do
     name { Faker::Lorem.sentence }
     options({})
     block(Proc.new { true })
+
+    factory :place_with_limit, class: RPetri::PlaceWithLimit do
+      options { { limit: limit } }
+      limit { 1 }
+    end
   end
 end
