@@ -15,4 +15,5 @@ require 'rpetri/version'
 # Extentions
 require 'rpetri/extentions/all_in_arc'
 require 'rpetri/extentions/net_place'
+require 'rpetri/extentions/generator_place'
 require 'rpetri/extentions/place_with_limit'

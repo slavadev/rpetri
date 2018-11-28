@@ -9,5 +9,8 @@ FactoryBot.define do
       options { { limit: limit } }
       limit { 1 }
     end
+
+    factory :generator_place, class: RPetri::GeneratorPlace do
+    end
   end
 end
