@@ -10,7 +10,7 @@ module RPetri
     end
 
     def run(options = {})
-      return unless @nblock
+      return unless @block
       @eval_context = options[:context]
       eval_context.instance_eval(&@block)
     end
