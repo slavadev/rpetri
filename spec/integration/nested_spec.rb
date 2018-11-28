@@ -2,7 +2,9 @@ RSpec.describe RPetri do
   let(:main_net) do
     RPetri::Net.build do
       place 'Start', tokens: 1
-      place 'Middle', net: nested_net, class: RPetri::NetPlace
+      place 'Middle', net: nested_net, class: RPetri::NetPlace, context: self do
+        @a
+      end
       place 'End' do
         expect(@a).to be(13)
       end
@@ -26,7 +28,9 @@ RSpec.describe RPetri do
       place 'Start', tokens: 1 do
         expect(@a).to be(1)
       end
-      place 'Middle', net: deeper_net, class: RPetri::NetPlace
+      place 'Middle', net: deeper_net, class: RPetri::NetPlace do
+        @a
+      end
       place 'End' do
         expect(@a).to be(12)
       end
@@ -66,7 +70,7 @@ RSpec.describe RPetri do
 
   describe 'basic net' do
     it 'works' do
-      main_net.run
+      main_net.run(context: self)
     end
   end
 end
