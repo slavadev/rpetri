@@ -14,3 +14,4 @@ require 'rpetri/net'
 require 'rpetri/version'
 # Extentions
 require 'rpetri/extentions/net_place'
+require 'rpetri/extentions/all_in_arc'

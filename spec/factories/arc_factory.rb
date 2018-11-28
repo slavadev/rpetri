@@ -4,5 +4,8 @@ FactoryBot.define do
     source { build :place }
     target { build :transition }
     options({})
+
+    factory :all_in_arc, class: RPetri::AllInArc do
+    end
   end
 end
