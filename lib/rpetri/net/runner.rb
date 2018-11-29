@@ -111,7 +111,7 @@ module RPetri
       end
 
       def check_for_looping
-        state_string = @tokens_hash.select { |_k, v| v > 0 }.reduce(&:to_s)
+        state_string = @tokens_hash.select { |_k, v| v > 0 }.to_a.sort.inspect
         @history_hash[state_string] += 1
         if @history_hash[state_string] > @max_loops_count
           fatal("Looping! Same state #{@history_hash[state_string]} times!")
