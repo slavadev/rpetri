@@ -2,7 +2,7 @@ RSpec.describe RPetri do
   let(:main_net) do
     RPetri::Net.build do
       place 'Start', tokens: 1
-      place 'Middle', net: nested_net, class: RPetri::NetPlace, context: self do
+      place 'Middle', net: nested_net, class: RPetri::NetPlace do
         @a
       end
       place 'End' do
